@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui" {
+  /* themes: all; */
+}
+
+/* Your custom theme */
+ 
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+
+  --color-base-100: oklch(1.0 0.25 145); /* Light green background */
+}
+
+body {
+  @apply leading-relaxed;
+}
+
+a {
+  @apply text-blue-500 underline hover:text-blue-700;
+}
