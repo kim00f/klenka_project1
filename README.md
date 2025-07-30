@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
   <img src="https://repository-images.githubusercontent.com/863301590/8529612f-d102-4a7d-9977-b722aa32ea6d" width="600">
 
@@ -449,3 +450,6 @@ WebSocket endpoints follow the same file-based routing as API endpoints:
 - `api/wss/chat.js` → `ws://localhost:4000/api/wss/chat`
 - `api/wss/notifications.js` → `ws://localhost:4000/api/wss/notifications`
 - `api/wss/game/[room].js` → `ws://localhost:4000/api/wss/game/room123`
+=======
+# klenka_project1
+>>>>>>> 1f54ff396b1498091c08402b840758fecb52e96b
