@@ -38,6 +38,28 @@ export default function NewsPage() {
     };
     fetchNews();
   }, []);
+const handleDelete = async (id) => {
+  
+
+  try {
+    const res = await fetch('/api/news2/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+
+    if (res.ok) {
+      // Remove the deleted post from local state
+      setNews((prevNews) => prevNews.filter((item) => item.id !== id));
+    } else {
+      const errorData = await res.json();
+      alert('Failed to delete: ' + (errorData?.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('Error deleting:', err);
+    alert('An error occurred while deleting');
+  }
+};
 
   if (loading) return <p>Loading news...</p>;
 
@@ -144,6 +166,8 @@ export default function NewsPage() {
             <li key={item.id || index} className="mb-2 border p-2 rounded">
               <h1 className="font-semibold">{item.title}</h1>
               <p>{item.description}</p>
+              <button className="mt-2 px-3 py-1 bg-red-500 text-white rounded" onClick={() => handleDelete(item.id)}> Delete </button>
+
             </li>
           ) : null
         )}

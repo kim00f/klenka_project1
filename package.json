@@ -18,6 +18,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0",
     "@tailwindcss/vite": "^4.1.11",
+    "ag-grid-community": "^34.1.0",
+    "ag-grid-react": "^34.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "daisyui": "^5.0.46",
