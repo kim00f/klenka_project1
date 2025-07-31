@@ -1,6 +1,7 @@
  
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import SignIn from "./pages/signin";
 
 export default function MainLayout({ children }) {
   return (
@@ -17,7 +18,7 @@ export default function MainLayout({ children }) {
             <li><Link to="/news" className="link">News</Link></li>
             <li><Link to="/teams" className="link">Teams</Link></li>
             <li><Link to="/Newspage">Newstable</Link></li>
-            <li><Link to="/signin">Signin</Link></li>
+            <li><SignIn/></li>
 
             {/* ✅ Use ThemeToggle component here */}
             <li><ThemeToggle /></li>
