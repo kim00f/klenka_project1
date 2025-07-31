@@ -21,7 +21,7 @@ export default async function (req, res) {
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'News item not found' });
     }
-
+    console.log("h")
     return res.status(200).json({ message: 'Title updated', data: result.rows[0] });
   } catch (err) {
     console.error('Update error:', err);

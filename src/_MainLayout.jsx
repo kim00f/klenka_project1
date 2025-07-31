@@ -16,6 +16,8 @@ export default function MainLayout({ children }) {
             <li><Link to="/about" className="link">About</Link></li>
             <li><Link to="/news" className="link">News</Link></li>
             <li><Link to="/teams" className="link">Teams</Link></li>
+            <li><Link to="/Newspage">Newstable</Link></li>
+            <li><Link to="/signin">Signin</Link></li>
 
             {/* ✅ Use ThemeToggle component here */}
             <li><ThemeToggle /></li>
