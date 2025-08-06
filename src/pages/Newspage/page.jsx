@@ -42,31 +42,8 @@ export default function NewsPage() {
     };
     fetchNews();
   }, []);
-const handleDelete = async (id) => {
-  
 
-  try {
-    const res = await fetch('/api/news2/delete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    });
-
-    if (res.ok) {
-      
-      setNews((prevNews) => prevNews.filter((item) => item.id !== id));
-    } else {
-      const errorData = await res.json();
-      alert('Failed to delete: ' + (errorData?.error || 'Unknown error'));
-    }
-  } catch (err) {
-    console.error('Error deleting:', err);
-    alert('An error occurred while deleting');
-  }
-};
-
-
-  if (loading) return <p>Loading news...</p>;
+  if (loading) return <p>Loading Article...</p>;
 
   return (
     <div className="p-4 relative">
@@ -148,6 +125,10 @@ const handleDelete = async (id) => {
                       const errData = await res.json();
                       alert('Failed to create post: ' + (errData?.message || 'Unknown error'));
                     }
+                    if (res.ok) {
+      
+      window.location.reload();
+    }
                   } catch (error) {
                     console.error('Error:', error);
                     alert('Something went wrong. Please try again.');
@@ -159,12 +140,14 @@ const handleDelete = async (id) => {
             >
               Create
             </button>
+            <button onClick={ () => {setShowSmallPage(false) 
+              window.location.reload} }>Cancel</button>
           </div>
         </div>
       )}
 
       {/* News list */}
-      <h1 className="text-xl font-bold mb-4 mt-4">News</h1>
+      <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
       <ul>
         {news.filter(Boolean).map((item, index) =>
           item && item.title && item.description ? (

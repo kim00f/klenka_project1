@@ -15,6 +15,10 @@ export default function DeleteNewsButton({ id, onDelete }) {
         const errorData = await res.json();
         alert('Failed to delete: ' + (errorData?.error || 'Unknown error'));
       }
+      if (res.ok) {
+      
+      window.location.reload();
+    }
     } catch (err) {
       console.error('Error deleting:', err);
       alert('An error occurred while deleting');
