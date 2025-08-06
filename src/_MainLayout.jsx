@@ -1,7 +1,7 @@
  
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import SignIn from "./pages/signin";
+import SignIn from "./functions/signin";
 
 export default function MainLayout({ children }) {
   return (

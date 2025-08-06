@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from 'react';
 
-
+import EditNewsForm from '../../functions/edit';
+import Delete from '../../functions/delete';
 
 
 
 
 export default function NewsPage() {
 
- // ✅ must be *inside* the component
+ 
   const [news, setNews] = useState([]);
 
 
@@ -17,6 +18,9 @@ export default function NewsPage() {
   const [showsmallpage, setShowSmallPage] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
+  const [editingId, setEditingId] = useState(null);
+
+  
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -49,7 +53,7 @@ const handleDelete = async (id) => {
     });
 
     if (res.ok) {
-      // Remove the deleted post from local state
+      
       setNews((prevNews) => prevNews.filter((item) => item.id !== id));
     } else {
       const errorData = await res.json();
@@ -60,6 +64,7 @@ const handleDelete = async (id) => {
     alert('An error occurred while deleting');
   }
 };
+
 
   if (loading) return <p>Loading news...</p>;
 
@@ -164,9 +169,37 @@ const handleDelete = async (id) => {
         {news.filter(Boolean).map((item, index) =>
           item && item.title && item.description ? (
             <li key={item.id || index} className="mb-2 border p-2 rounded">
-              <h1 className="font-semibold">{item.title}</h1>
-              <p>{item.description}</p>
-              <button className="mt-2 px-3 py-1 bg-red-500 text-white rounded" onClick={() => handleDelete(item.id)}> Delete </button>
+{editingId === item.id ? (
+  <EditNewsForm
+    id={item.id}
+    currentTitle={item.title}
+    currentDescription={item.description}
+    onSave={(id, newTitle, newDescription) => {
+      setNews(prev =>
+        prev.map(post =>
+          post.id === id
+            ? { ...post, title: newTitle, description: newDescription }
+            : post
+        )
+      );
+      setEditingId(null); // ✅ close the editor
+    }}
+    onCancel={() => setEditingId(null)}
+
+  />
+) : (
+  <>
+    <h1 className="font-semibold">{item.title}</h1>
+    <p>{item.description}</p>
+    <Delete id={item.id}/>
+    <button
+      className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+      onClick={() => setEditingId(item.id)} 
+    >
+      Edit
+    </button>
+  </>
+)}
 
             </li>
           ) : null
