@@ -46,7 +46,8 @@ export default function NewsPage() {
   if (loading) return <p>Loading Article...</p>;
 
   return (
-    <div className="p-4 relative">
+    <div className="min-h-screen w-screen bg-white">
+    <div className="max-w-2xl mx-auto">
       {/* Create Post button */}
       <button
         className="mt-10 border rounded px-4 py-2 cursor-pointer"
@@ -151,7 +152,10 @@ export default function NewsPage() {
       <ul>
         {news.filter(Boolean).map((item, index) =>
           item && item.title && item.description ? (
-            <li key={item.id || index} className="mb-2 border p-2 rounded">
+          <li
+  key={item.id || index}
+  className="mb-4 bg-white shadow-md rounded-lg p-4 flex flex-col gap-2 border border-gray-200"
+>
 {editingId === item.id ? (
   <EditNewsForm
     id={item.id}
@@ -176,11 +180,11 @@ export default function NewsPage() {
     <p>{item.description}</p>
     <Delete id={item.id}/>
     <button
-      className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
-      onClick={() => setEditingId(item.id)} 
-    >
-      Edit
-    </button>
+    className="px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition"
+    onClick={() => setEditingId(item.id)}
+  >
+    Edit
+  </button>
   </>
 )}
 
@@ -188,6 +192,7 @@ export default function NewsPage() {
           ) : null
         )}
       </ul>
+    </div>
     </div>
   );
 }

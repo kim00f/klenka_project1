@@ -15,6 +15,7 @@
 
 body {
   @apply leading-relaxed;
+  background-color: white !important;
 }
 
 a {
