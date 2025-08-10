@@ -35,13 +35,21 @@ export default function NewsPage() {
       if(user){
         setuserid(user.id)
       }
+      else{
+        setLoading(false);
+      }
     };
     loaduseer();
   },[]);
   useEffect(() => {
+    if (!userid) return; // Ensure userid is set before fetching news
     const fetchNews = async () => {
       try {
-        const res = await fetch('/api/news2/get');
+        const res = await fetch('/api/news2/get', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ user_id: userid})
+});
         const data = await res.json();
         if (data?.news && Array.isArray(data.news)) {
           setNews(data.news);
@@ -57,7 +65,7 @@ export default function NewsPage() {
       }
     };
     fetchNews();
-  }, []);
+  }, [userid]);
   const columnDefs = [
     
     { headerName: 'Title', field: 'title' },
@@ -68,13 +76,13 @@ export default function NewsPage() {
     },
     { cellRenderer: (params) =>{
       return(
-        <button className="mt-2 px-3 py-1 bg-blue-400 text-white cursor-pointer"onClick={()=>setEditing(params.data)}>Edit</button>
+        <button className="mt-2 px-3 py-1 bg-blue-400 text-white cursor-pointer" onClick={()=>setEditing(params.data)}>Edit</button>
       )
 
     }},
   ];
   if (loading) return <p>Loading Article...</p>;
-
+if(userid){
   return (
     <div className="min-h-screen w-screen bg-white">
     <div className="max-w-2xl mx-auto">
@@ -205,4 +213,13 @@ export default function NewsPage() {
     </div>
     </div>
   );
+}
+else{
+  
+  return( 
+    <div className="min-h-screen w-screen bg-white flex items-center justify-center">
+      <p className="text-gray-500">Please log in to view your news articles.</p>
+    </div>
+  );
+}
 }

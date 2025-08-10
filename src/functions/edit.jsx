@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-
+import { useEffect } from 'react';
 export default function EditNewsForm({ id, currentTitle, currentDescription,onCancel, onSave }) {
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
   const [loading, setLoading] = useState(false);
-
+  useEffect(() => {
+    setTitle(currentTitle);
+    setDescription(currentDescription);
+  }, [id,currentTitle, currentDescription]);
   const handleSave = async () => {
     setLoading(true);
     try {
