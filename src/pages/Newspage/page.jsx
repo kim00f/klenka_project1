@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import supabase from '../../../lib/createclient';
 import EditNewsForm from '../../functions/edit';
 import Delete from '../../functions/delete';
 import { AgGridReact } from 'ag-grid-react';
@@ -22,15 +22,22 @@ ModuleRegistry.registerModules([
 
 export default function NewsPage() {
 
- 
+  const[userid, setuserid] = useState(null);
   const [news, setNews] = useState([]);
-
-
   const [loading, setLoading] = useState(true);
   const [showsmallpage, setShowSmallPage] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [editing, setEditing] = useState(null);
+  useEffect(()=>{
+    const loaduseer= async()=>{
+      const { data: {user}}= await supabase.auth.getUser();
+      if(user){
+        setuserid(user.id)
+      }
+    };
+    loaduseer();
+  },[]);
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -126,7 +133,7 @@ export default function NewsPage() {
                     const res = await fetch('/api/news2/create', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ title: postTitle, description: postText }),
+                      body: JSON.stringify({ title: postTitle, description: postText, userid:userid }),
                     });
                     if (res.ok) {
                       const data = await res.json();
