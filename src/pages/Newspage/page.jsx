@@ -25,7 +25,7 @@ export default function NewsPage() {
   const[userid, setuserid] = useState(null);
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showsmallpage, setShowSmallPage] = useState(false);
+  const [createform, setcreateform] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [editing, setEditing] = useState(null);
@@ -82,6 +82,70 @@ export default function NewsPage() {
     }},
   ];
   if (loading) return <p>Loading Article...</p>;
+  if(createform){
+    return (
+      <div className="min-h-screen w-screen bg-white">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4">Create News Article</h1>
+          <div className="flex flex-col mb-4">
+            <label htmlFor="title" className="text-sm font-medium mb-1">Title:</label>
+            <input
+              id="title"
+              type="text"
+              className="border rounded px-2 py-1"
+              placeholder="Enter title..."
+              value={postTitle}
+              onChange={(e) => setPostTitle(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col mb-4">
+            <label htmlFor="content" className="text-sm font-medium mb-1">Description:</label>
+            <textarea
+              id="content"
+              className="border rounded px-2 py-2 w-full h-96 resize-none overflow-hidden"
+              placeholder="Type your message here..."
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+              rows={3}
+            ></textarea>
+          </div>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            onClick={async () => {
+              if (postTitle.trim() !== '' && postText.trim() !== '') {
+                try {
+                  const res = await fetch('/api/news2/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: postTitle, description: postText, userid:userid }),
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    if (data.news.id) {
+                      setNews([data.news, ...news]);
+                      setPostTitle('');
+                      setPostText('');
+                      setcreateform(false);
+                      window.location.reload();
+                    }
+                  } else {
+                    const errData = await res.json();
+                    alert('Failed to create post: ' + (errData?.message || 'Unknown error'));
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Something went wrong. Please try again.');
+                }
+              } else {
+                alert('Please enter both title and description!');
+              }
+            }}
+            >Create</button>
+          <button className="cursor-pointer" onClick={() => setcreateform(false)}>Cancel</button>
+        </div>
+      </div>
+    );
+  }
 if(userid){
   return (
     <div className="min-h-screen w-screen bg-white">
@@ -89,102 +153,12 @@ if(userid){
       {/* Create Post button */}
       <button
         className="mt-10 border rounded px-4 py-2 cursor-pointer"
-        onClick={() => setShowSmallPage(true)}
+        onClick={() => setcreateform(true)}
       >
         Create Post
       </button>
 
-      {/* Modal overlay */}
-      {showsmallpage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded shadow-lg w-96">
-            {/* Title field */}
-            <div className="flex flex-col mb-2">
-              <label htmlFor="title" className="text-sm font-medium mb-1">Title:</label>
-              <textarea
-                id="title"
-                className="border rounded px-2 py-1 resize-none overflow-hidden"
-                placeholder="Enter title..."
-                value={postTitle}
-                onChange={(e) => {
-                  setPostTitle(e.target.value);
-                  e.target.style.height = 'auto';
-                  e.target.style.height = e.target.scrollHeight + 'px';
-                }}
-                rows={1}
-              ></textarea>
-            </div>
-
-            {/* Description field */}
-            <div className="flex flex-col mb-2">
-              <label htmlFor="content" className="text-sm font-medium mb-1">Description:</label>
-              <textarea
-                id="content"
-                className="border rounded px-2 py-2 resize-none overflow-hidden"
-                placeholder="Type your message here..."
-                value={postText}
-                onChange={(e) => {
-                  setPostText(e.target.value);
-                  e.target.style.height = 'auto';
-                  e.target.style.height = e.target.scrollHeight + 'px';
-                }}
-                rows={2}
-              ></textarea>
-            </div>
-
-            {/* Create button */}
-            <button
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              onClick={async () => {
-                if (postTitle.trim() !== '' && postText.trim() !== '') {
-                  try {
-                    const res = await fetch('/api/news2/create', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ title: postTitle, description: postText, userid:userid }),
-                    });
-                    if (res.ok) {
-                      const data = await res.json();
-
-                      
-                      if ( data.news.id  ) {
-                        
-                        // Add new post to local state
-                        
-                        setNews([data.post, ...news]);
-                        // Clear inputs and close modal
-                        setPostTitle('');
-                        setPostText('');
-                        setShowSmallPage(false);
-
-                        // ✅ Navigate back to /news page (refresh)
-                     
-                      }
-                    } else {
-                      const errData = await res.json();
-                      alert('Failed to create post: ' + (errData?.message || 'Unknown error'));
-                    }
-                    if (res.ok) {
-      
-      window.location.reload();
-    }
-                  } catch (error) {
-                    console.error('Error:', error);
-                    alert('Something went wrong. Please try again.');
-                  }
-                } else {
-                  alert('Please enter both title and description!');
-                }
-              }}
-            >
-              Create
-            </button>
-            <button className="cursor-pointer"onClick={ () => {setShowSmallPage(false) 
-              window.location.reload} }>Cancel</button>
-          </div>
-        </div>
-      )}
-
+     
       {/* News list */}
       <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
       <div className="ag-theme-alpine" style={{ height: 600, width: 800 }} >

@@ -41,7 +41,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,onCa
   };
 
   return (
-    <div className="border p-4 rounded shadow-sm bg-white mb-4">
+    <div className="border p-4 rounded h-full shadow-sm bg-white mb-4">
       <input
         type="text"
         className="w-full border px-3 py-2 mb-3 rounded"
@@ -50,7 +50,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,onCa
         onChange={(e) => setTitle(e.target.value)}
       />
       <textarea
-        className="w-full border px-3 py-2 mb-3 rounded"
+        className="w-full h-80 border px-3 py-2 mb-3 rounded"
         rows={3}
         placeholder="Edit description..."
         value={description}
