@@ -55,13 +55,13 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,onCa
       />
       <div className="flex gap-3">
         <button
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
+          className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 disabled:opacity-50"
           onClick={handleSave}
           disabled={loading}
         >
           {loading ? 'Saving...' : 'Save'}
         </button>
-        <button onClick={() => onCancel()}>Cancel</button>
+        <button className="cursor-pointer"onClick={() => onCancel()}>Cancel</button>
       </div>
     </div>
   );

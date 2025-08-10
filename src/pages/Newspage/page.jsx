@@ -4,8 +4,20 @@ import { useEffect, useState } from 'react';
 
 import EditNewsForm from '../../functions/edit';
 import Delete from '../../functions/delete';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { CsvExportModule } from 'ag-grid-community';
 
 
+// Register only available community modules
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  CsvExportModule,
+ 
+]);
 
 
 export default function NewsPage() {
@@ -18,10 +30,7 @@ export default function NewsPage() {
   const [showsmallpage, setShowSmallPage] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
-  const [editingId, setEditingId] = useState(null);
-
-  
-
+  const [editing, setEditing] = useState(null);
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -42,7 +51,21 @@ export default function NewsPage() {
     };
     fetchNews();
   }, []);
+  const columnDefs = [
+    
+    { headerName: 'Title', field: 'title' },
+    { headerName: 'Description', field: 'description' },
+    {cellRenderer: (params) => {
+      return( <Delete id={params.data.id}/>)
+    }
+    },
+    { cellRenderer: (params) =>{
+      return(
+        <button className="mt-2 px-3 py-1 bg-blue-400 text-white cursor-pointer"onClick={()=>setEditing(params.data)}>Edit</button>
+      )
 
+    }},
+  ];
   if (loading) return <p>Loading Article...</p>;
 
   return (
@@ -141,7 +164,7 @@ export default function NewsPage() {
             >
               Create
             </button>
-            <button onClick={ () => {setShowSmallPage(false) 
+            <button className="cursor-pointer"onClick={ () => {setShowSmallPage(false) 
               window.location.reload} }>Cancel</button>
           </div>
         </div>
@@ -149,18 +172,12 @@ export default function NewsPage() {
 
       {/* News list */}
       <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
-      <ul>
-        {news.filter(Boolean).map((item, index) =>
-          item && item.title && item.description ? (
-          <li
-  key={item.id || index}
-  className="mb-4 bg-white shadow-md rounded-lg p-4 flex flex-col gap-2 border border-gray-200"
->
-{editingId === item.id ? (
-  <EditNewsForm
-    id={item.id}
-    currentTitle={item.title}
-    currentDescription={item.description}
+      <div className="ag-theme-alpine" style={{ height: 600, width: 800 }} >
+        {editing &&(
+          <EditNewsForm
+    id={editing.id}
+    currentTitle={editing.title}
+    currentDescription={editing.description}
     onSave={(id, newTitle, newDescription) => {
       setNews(prev =>
         prev.map(post =>
@@ -169,29 +186,15 @@ export default function NewsPage() {
             : post
         )
       );
-      setEditingId(null); // ✅ close the editor
+      setEditing(null);
     }}
-    onCancel={() => setEditingId(null)}
+    onCancel={() => setEditing(null)}
 
   />
-) : (
-  <>
-    <h1 className="font-semibold">{item.title}</h1>
-    <p>{item.description}</p>
-    <Delete id={item.id}/>
-    <button
-    className="px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition"
-    onClick={() => setEditingId(item.id)}
-  >
-    Edit
-  </button>
-  </>
-)}
 
-            </li>
-          ) : null
         )}
-      </ul>
+        <AgGridReact rowData={news} columnDefs={columnDefs} rowHeight={50}/>
+        </div>
     </div>
     </div>
   );
