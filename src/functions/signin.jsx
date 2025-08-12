@@ -21,14 +21,14 @@ export default function SignIn() {
   }, []);
 
   
-  const handleLogin = async () => {
+  /* const handleLogin = async () => {
     
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       
     });
    
-  };
+  }; */
 
    const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -36,12 +36,12 @@ export default function SignIn() {
 
   if(!session){
   return (
-    <button
-      onClick={handleLogin}
+    <a
+      href='/login'
       className="bg-neutral text-white .rounded-lg pr-1 pl-1 "
     >
       Sign In
-    </button>
+    </a>
   );
 }
 else{
