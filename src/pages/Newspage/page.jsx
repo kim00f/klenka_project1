@@ -29,6 +29,7 @@ export default function NewsPage() {
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [editing, setEditing] = useState(null);
+  const [searchtext,setsearchtext]=useState('');
   useEffect(()=>{
     const loaduseer= async()=>{
       const { data: {user}}= await supabase.auth.getUser();
@@ -48,7 +49,7 @@ export default function NewsPage() {
         const res = await fetch('/api/news2/get', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ user_id: userid})
+  body: JSON.stringify({ user_id: userid,search_text: searchtext})
 });
         const data = await res.json();
         if (data?.news && Array.isArray(data.news)) {
@@ -65,7 +66,7 @@ export default function NewsPage() {
       }
     };
     fetchNews();
-  }, [userid]);
+  }, [userid, searchtext]);
   const columnDefs = [
     
     { headerName: 'Title', field: 'title' },
@@ -157,7 +158,7 @@ if(userid){
       >
         Create Post
       </button>
-
+      <input className="border px-2 py-1 mb-3" type="text" placeholder="search" value={searchtext} onChange={(e)=>setsearchtext(e.target.value)}/>
      
       {/* News list */}
       <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
