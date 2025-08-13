@@ -2,14 +2,25 @@
 
 import { useState } from 'react';
 import { useEffect } from 'react';
-export default function EditNewsForm({ id, currentTitle, currentDescription,onCancel, onSave }) {
+export default function EditNewsForm({ id, currentTitle, currentDescription,currentkeywords,onCancel, onSave }) {
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
+  const [keywords,setkeywords] = useState(currentkeywords);
+  const [keyWordInput, setKeyWordInput] = useState('');
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setTitle(currentTitle);
     setDescription(currentDescription);
   }, [id,currentTitle, currentDescription]);
+  const handlekeywordadd =() =>{
+    if(keyWordInput.trim()!=='' && !keywords.includes(keyWordInput.trim())){
+      setkeywords([...keywords, keyWordInput.trim()]);
+      setKeyWordInput('');
+    }
+  }
+  const handlekeywordremove = (kw) =>{
+    setkeywords(keywords.filter(k => k !== kw));
+  }
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -26,6 +37,12 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,onCa
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, description }),
       });
+      // update keywords 
+      const reskey=await fetch('/api/news2/updatekeywords',{
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, key_words: keywords }),
+      })
 
       if (resTitle.ok && resDesc.ok) {
         onSave(id, title, description);
@@ -56,6 +73,18 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,onCa
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
+      <div>
+            <label>KEYWORDS:</label>
+            <div>
+              <input type="text" value={keyWordInput} onChange={(e)=>setKeyWordInput(e.target.value)}/>
+              <button className="ml-2 px-2 py-1 bg-blue-500 text-white rounded" onClick={handlekeywordadd}>Add</button>
+            </div>
+            <div>
+              {keywords.map((kw)=>(
+                <span className="bg-gray-200 px-2 py-1 m-1 rounded-full flex items-center">{kw}<button className="ml-2 text-red-500" onClick={()=>handlekeywordremove(kw)}>Remove</button></span>
+              ))}
+            </div>
+          </div>
       <div className="flex gap-3">
         <button
           className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 disabled:opacity-50"

@@ -28,6 +28,8 @@ export default function NewsPage() {
   const [createform, setcreateform] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
+  const [keywords,setkeywords] = useState([]);
+  const [keyWordInput, setKeyWordInput] = useState('');
   const [editing, setEditing] = useState(null);
   const [searchtext,setsearchtext]=useState('');
   useEffect(()=>{
@@ -82,6 +84,15 @@ export default function NewsPage() {
 
     }},
   ];
+  const handlekeywordadd =() =>{
+    if(keyWordInput.trim()!=='' && !keywords.includes(keyWordInput.trim())){
+      setkeywords([...keywords, keyWordInput.trim()]);
+      setKeyWordInput('');
+    }
+  }
+  const handlekeywordremove = (kw) =>{
+    setkeywords(keywords.filter(k => k !== kw));
+  }
   if (loading) return <p>Loading Article...</p>;
   if(createform){
     return (
@@ -110,6 +121,18 @@ export default function NewsPage() {
               rows={3}
             ></textarea>
           </div>
+          <div>
+            <label>KEYWORDS:</label>
+            <div>
+              <input type="text" value={keyWordInput} onChange={(e)=>setKeyWordInput(e.target.value)}/>
+              <button className="ml-2 px-2 py-1 bg-blue-500 text-white rounded" onClick={handlekeywordadd}>Add</button>
+            </div>
+            <div>
+              {keywords.map((kw)=>(
+                <span className="bg-gray-200 px-2 py-1 m-1 rounded-full flex items-center">{kw}<button className="ml-2 text-red-500" onClick={()=>handlekeywordremove(kw)}>Remove</button></span>
+              ))}
+            </div>
+          </div>
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
             onClick={async () => {
@@ -118,7 +141,7 @@ export default function NewsPage() {
                   const res = await fetch('/api/news2/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: postTitle, description: postText, userid:userid }),
+                    body: JSON.stringify({ title: postTitle, description: postText, userid:userid , key_words: keywords }),
                   });
                   if (res.ok) {
                     const data = await res.json();
@@ -168,6 +191,7 @@ if(userid){
     id={editing.id}
     currentTitle={editing.title}
     currentDescription={editing.description}
+    currentkeywords={editing.key_words}
     onSave={(id, newTitle, newDescription) => {
       setNews(prev =>
         prev.map(post =>
