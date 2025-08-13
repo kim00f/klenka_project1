@@ -95,46 +95,76 @@ export default function NewsPage() {
   }
   if (loading) return <p>Loading Article...</p>;
   if(createform){
-    return (
-      <div className="min-h-screen w-screen bg-white">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Create News Article</h1>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="title" className="text-sm font-medium mb-1">Title:</label>
-            <input
-              id="title"
-              type="text"
-              className="border rounded px-2 py-1"
-              placeholder="Enter title..."
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
+  return (
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
+        <h1 className="text-xl font-bold mb-6">Create News Article</h1>
+        
+        {/* Title Input */}
+        <div className="mb-6">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title:</label>
+          <input
+            id="title"
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter title..."
+            value={postTitle}
+            onChange={(e) => setPostTitle(e.target.value)}
+          />
+        </div>
+        
+        {/* Description Input */}
+        <div className="mb-6">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Description:</label>
+          <textarea
+            id="content"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-64 resize-none"
+            placeholder="Type your message here..."
+            value={postText}
+            onChange={(e) => setPostText(e.target.value)}
+          ></textarea>
+        </div>
+        
+        {/* Keywords Section */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">KEYWORDS:</label>
+          <div className="flex mb-2">
+            <input 
+              type="text" 
+              className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              value={keyWordInput} 
+              onChange={(e)=>setKeyWordInput(e.target.value)}
+              placeholder="Add keyword..."
             />
+            <button 
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-r-md transition"
+              onClick={handlekeywordadd}
+            >
+              Add
+            </button>
           </div>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="content" className="text-sm font-medium mb-1">Description:</label>
-            <textarea
-              id="content"
-              className="border rounded px-2 py-2 w-full h-96 resize-none overflow-hidden"
-              placeholder="Type your message here..."
-              value={postText}
-              onChange={(e) => setPostText(e.target.value)}
-              rows={3}
-            ></textarea>
+          <div className="flex flex-wrap gap-2">
+            {keywords.map((kw) => (
+              <span 
+                key={kw} 
+                className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-800"
+              >
+                {kw}
+                <button 
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  onClick={() => handlekeywordremove(kw)}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
           </div>
-          <div>
-            <label>KEYWORDS:</label>
-            <div>
-              <input type="text" value={keyWordInput} onChange={(e)=>setKeyWordInput(e.target.value)}/>
-              <button className="ml-2 px-2 py-1 bg-blue-500 text-white rounded" onClick={handlekeywordadd}>Add</button>
-            </div>
-            <div>
-              {keywords.map((kw)=>(
-                <span className="bg-gray-200 px-2 py-1 m-1 rounded-full flex items-center">{kw}<button className="ml-2 text-red-500" onClick={()=>handlekeywordremove(kw)}>Remove</button></span>
-              ))}
-            </div>
-          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex gap-3">
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-sm transition"
             onClick={async () => {
               if (postTitle.trim() !== '' && postText.trim() !== '') {
                 try {
@@ -164,50 +194,67 @@ export default function NewsPage() {
                 alert('Please enter both title and description!');
               }
             }}
-            >Create</button>
-          <button className="cursor-pointer" onClick={() => setcreateform(false)}>Cancel</button>
+          >
+            Create
+          </button>
+          <button 
+            className="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-md shadow-sm transition"
+            onClick={() => setcreateform(false)}
+          >
+            Cancel
+          </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 if(userid){
   return (
-    <div className="min-h-screen w-screen bg-white">
-    <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-10">
+    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
       {/* Create Post button */}
       <button
-        className="mt-10 border rounded px-4 py-2 cursor-pointer"
+        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-sm transition"
         onClick={() => setcreateform(true)}
       >
         Create Post
       </button>
-      <input className="border px-2 py-1 mb-3" type="text" placeholder="search" value={searchtext} onChange={(e)=>setsearchtext(e.target.value)}/>
+      <input className="ml-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" type="text" placeholder="search" value={searchtext} onChange={(e)=>setsearchtext(e.target.value)}/>
      
       {/* News list */}
       <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
-      <div className="ag-theme-alpine" style={{ height: 600, width: 800 }} >
-        {editing &&(
-          <EditNewsForm
-    id={editing.id}
-    currentTitle={editing.title}
-    currentDescription={editing.description}
-    currentkeywords={editing.key_words}
-    onSave={(id, newTitle, newDescription) => {
-      setNews(prev =>
-        prev.map(post =>
-          post.id === id
-            ? { ...post, title: newTitle, description: newDescription }
-            : post
-        )
-      );
-      setEditing(null);
-    }}
-    onCancel={() => setEditing(null)}
+      <div className="ag-theme-alpine" style={{ height: 600, width: 850 }} >
+     {editing && (
+    <div className="bg-white shadow-md border-b p-4">
+      <h2 className="text-xl font-bold mb-4">Editing: {editing.title}</h2>
 
-  />
-
-        )}
-        <AgGridReact rowData={news} columnDefs={columnDefs} rowHeight={50}/>
+      <EditNewsForm
+        id={editing.id}
+        currentTitle={editing.title}
+        currentDescription={editing.description}
+        currentkeywords={editing.key_words}
+        onSave={(id, newTitle, newDescription) => {
+          setNews(prev =>
+            prev.map(post =>
+              post.id === id
+                ? { ...post, title: newTitle, description: newDescription }
+                : post
+            )
+          );
+          setEditing(null);
+        }}
+        onCancel={() => setEditing(null)}
+      />
+    </div>
+  )}
+        <AgGridReact   rowData={news}
+      columnDefs={columnDefs}
+     rowHeight={50}
+     pagination={true}
+     paginationPageSize={10}
+     domLayout="autoHeight"
+     className="ag-theme-alpine"
+     overlayNoRowsTemplate="No articles found"/>
         </div>
     </div>
     </div>
