@@ -21,17 +21,10 @@ export default function SignIn() {
   }, []);
 
   
-  /* const handleLogin = async () => {
-    
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      
-    });
-   
-  }; */
-
+  
    const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    window.location.href='/'
   };
 
   if(!session){
