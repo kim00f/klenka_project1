@@ -211,6 +211,7 @@ export default function NewsPage() {
 if(userid){
   return (
     <div className="min-h-screen bg-gray-50 py-10">
+      <a href='/chat'>want help?</a>
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
       {/* Create Post button */}
       <button
@@ -257,6 +258,7 @@ if(userid){
      overlayNoRowsTemplate="No articles found"/>
         </div>
     </div>
+    
     </div>
   );
 }
