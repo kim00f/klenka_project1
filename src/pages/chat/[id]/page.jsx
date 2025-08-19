@@ -1,13 +1,12 @@
 "use client";
 import { useEffect,useState } from "react";
-import supabase from "../../../lib/createclient";
+import supabase from "../../../../lib/createclient";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false); 
   const[userid, setuserid] = useState(null);
-  const[sessionid,setsessionid] = useState(null);
 
 
 useEffect(()=>{
@@ -15,15 +14,6 @@ useEffect(()=>{
       const { data: {user}}= await supabase.auth.getUser();
       if(user){
         setuserid(user.id)
-        const res= await fetch("/api/chat/new_session",{
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: user.id }),
-        });
-        
-        const data = await res.json();
-        
-        setsessionid(data.session.id);
       }
       else{
         setLoading(false);
@@ -42,7 +32,7 @@ useEffect(()=>{
       const res = await fetch("/api/chat/aichat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userMessage, user_id: userid, session_id: sessionid}),
+        body: JSON.stringify({ prompt: userMessage, user_id: userid }),
       });
 
       const data = await res.json();
