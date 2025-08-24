@@ -32,6 +32,7 @@ export default function ChatLayout({ children }) {
     <div className="flex h-screen w-full">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white p-4 space-y-2 overflow-y-auto">
+        <a href="/chat">New chat</a>
         <h2 className="text-lg font-bold mb-4">Your Chats</h2>
         {loading ? (
           <div>Loading...</div>
