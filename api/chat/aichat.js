@@ -28,7 +28,9 @@ export default async function handler(req, res) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are a helpful and friendly chatbot." },
+        { role: "system", 
+          content: `You are a helpful assistant.Use the knowledge base when answering.Do not mention that you are using a database.
+          If the answer in the knowledge base seems incomplete, explain what you have.If nothing is relevant, say: "I don’t have that information."` },
         {role:"system", content:`Here is the database context:${dbcontext}`},
         ...chathistory.rows.map(m => ({ role: m.role, content: m.content })),
         { role: "user", content: prompt },
