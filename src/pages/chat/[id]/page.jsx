@@ -9,7 +9,7 @@ export default function ChatPage({ params }) {
   const [userid, setuserid] = useState(null);
   const [sessionid, setsessionid] = useState(null);
 
-  // ✅ first effect: set sessionid and load user
+ 
   useEffect(() => {
     const pathParts = window.location.pathname.split("/chat/");
     if (pathParts[1]) {
@@ -30,7 +30,7 @@ export default function ChatPage({ params }) {
     loadUser();
   }, []);
 
-  // ✅ second effect: only load messages once sessionid is ready
+  
   useEffect(() => {
     if (!sessionid) return;
 

@@ -11,11 +11,15 @@ export default function ChatPage() {
 
   useEffect(() => {
     const loadUser = async () => {
+      setLoading(true)
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setUserid(user.id);  
+        setUserid(user.id); 
+        
       }
+      setLoading(false) 
     };
+    
     loadUser();
   }, []);
 
@@ -60,7 +64,14 @@ export default function ChatPage() {
       setLoading(false);
     }
   };
-
+  if(loading){
+    return <div className="flex flex-col w-full h-full bg-gray-700">
+      <div className="p-4 bg-black text-white text-lg font-semibold shadow">
+        Loading...
+      </div>
+    </div>
+  }
+ if(userid){
   return (
     <div className="flex flex-col w-full h-full bg-gray-700">
       <div className="p-4 bg-black text-white text-lg font-semibold shadow">
@@ -90,4 +101,12 @@ export default function ChatPage() {
       </div>
     </div>
   );
+}
+else{
+  return <div className="flex flex-col w-full h-full bg-gray-700">
+    <div className="p-4 bg-black text-white text-lg font-semibold shadow">
+      Please log in to use the chat.
+    </div>
+  </div>
+}
 }

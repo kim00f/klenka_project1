@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import supabase from "../../../lib/createclient";
+import DeleteChat from "../../functions/deletechat";
 
 export default function ChatLayout({ children }) {
   const [sessions, setSessions] = useState([]);
@@ -37,20 +38,24 @@ export default function ChatLayout({ children }) {
         {loading ? (
           <div>Loading...</div>
         ) : sessions.length === 0 ? (
-          <div className="text-gray-400">No sessions yet</div>
+          <div className="text-gray-400">You dont have any previous chats</div>
         ) : (
           sessions.map((s) => (
+            <div  key={s.id}
+        className={`flex items-center justify-between p-2 rounded ${
+          currentId == s.id
+            ? "bg-gray-700 font-semibold"
+            : "hover:bg-gray-700"
+        }`}>
             <a
               key={s.id}
               href={`/chat/${s.id}`} // normal link (Mare will handle navigation)
-              className={`block p-2 rounded ${
-                currentId == s.id
-                  ? "bg-gray-700 font-semibold"
-                  : "hover:bg-gray-700"
-              }`}
+              className="text-blue-400 hover:underline flex-1"
             >
-              {s.title}
+              {s.title} 
             </a>
+            <DeleteChat id={s.id} />
+            </div>
           ))
         )}
       </aside>
