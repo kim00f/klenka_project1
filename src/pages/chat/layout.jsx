@@ -30,7 +30,7 @@ export default function ChatLayout({ children }) {
   const currentId = window?.location?.pathname.split("/chat/")[1];
 
   return (
-    <div className="flex h-screen w-full">
+    <div className=" min-h-screen md:flex h-screen w-full">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white p-4 space-y-2 overflow-y-auto">
         <a href="/chat">New chat</a>

@@ -80,8 +80,8 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
               <button className="ml-2 px-2 py-1 bg-blue-500 text-white rounded" onClick={handlekeywordadd}>Add</button>
             </div>
             <div>
-              {keywords.map((kw)=>(
-                <span className="bg-gray-200 px-2 py-1 m-1 rounded-full flex items-center">{kw}<button className="ml-2 text-red-500" onClick={()=>handlekeywordremove(kw)}>Remove</button></span>
+              {(keywords || []).map((kw,i)=>(
+                <span key={i} className="bg-gray-200 px-2 py-1 m-1 rounded-full flex items-center">{kw}<button className="ml-2 text-red-500" onClick={()=>handlekeywordremove(kw)}>Remove</button></span>
               ))}
             </div>
           </div>
