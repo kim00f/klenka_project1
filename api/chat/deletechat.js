@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     let { session_id } = req.body;
-    console.log("Deleting session:", session_id);
+    
 
     // ✅ Fix: normalize session_id if it comes as an object
     if (session_id && typeof session_id === "object" && session_id.id) {

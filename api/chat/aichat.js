@@ -3,8 +3,12 @@ import pool from '../../lib/db.js'
 import js from "@eslint/js";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // store in .env
+  apiKey: process.env.OPENAI_API_KEY,
 });
+const deepseek = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com/v1",
+})
 
 export default async function handler(req, res) {
     
@@ -13,20 +17,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt, user_id , session_id } = req.body;
+    const { prompt, user_id , session_id, provider } = req.body;
+    console.log("Provider selected:", provider);
 
     if (!prompt || prompt.trim() === "") {
       return res.status(400).json({ error: "Prompt is required" });
     }
     
     let dbcontext=''
+    let client= provider === "deepseek" ? deepseek : openai;
     
     const result = await pool.query('SELECT * FROM news WHERE user_id=$1',[user_id]);
     await pool.query('insert into chat_messages (session_id,role,content) values ($1,$2,$3)',[session_id,'user',prompt]);
     let chathistory = await pool.query('select* from chat_messages where session_id=$1 order by created_at asc',[session_id])
     dbcontext = JSON.stringify(result.rows);
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const completion = await client.chat.completions.create({
+      model: provider === "deepseek" ? "deepseek-chat" : "gpt-4o-mini",
       messages: [
         { role: "system", 
           content: `You are a helpful assistant.Use the knowledge base when answering.Do not mention that you are using a database.

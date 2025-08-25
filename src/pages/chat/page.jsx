@@ -7,6 +7,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [userid, setUserid] = useState(null);
   const [loading, setLoading] = useState(false);  
+  const[sendLoading,setSendLoading]= useState(false);
+  const[provider,setProvider]= useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function ChatPage() {
     if (!input.trim() || !userid || loading) return;
 
     try {
-      setLoading(true);   
+       setSendLoading(true);
       const res = await fetch("/api/chat/new_session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,13 +42,13 @@ export default function ChatPage() {
 
       const data = await res.json();
       if (!data?.session) {
-        setLoading(false);
+        setSendLoading(false);
         return;
       }
 
       const sessionId = data.session.id;
 
-      
+      console.log(provider)
       await fetch("/api/chat/aichat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,6 +56,7 @@ export default function ChatPage() {
           prompt: input,
           user_id: userid,
           session_id: sessionId,
+          provider: provider
         }),
       });
 
@@ -61,7 +64,7 @@ export default function ChatPage() {
       navigate(`/chat/${sessionId}`);
     } catch (err) {
       console.error("Error creating session:", err);
-      setLoading(false);
+      setSendLoading(false);
     }
   };
   if(loading){
@@ -76,6 +79,10 @@ export default function ChatPage() {
     <div className="flex flex-col w-full h-full bg-gray-700">
       <div className="p-4 bg-black text-white text-lg font-semibold shadow">
         Chat Page
+        <select onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
+          <option value="openai">GPT</option>
+          <option value="deepseek">Deepseek</option>
+        </select>
       </div>
 
       
@@ -93,10 +100,10 @@ export default function ChatPage() {
         />
         <button
           onClick={handleSend}
-          disabled={loading}   
+          disabled={sendLoading}   
           className="bg-black-600 text-white px-6 py-2 rounded-xl hover:bg-black-700 transition"
         >
-          {loading ? "Sending..." : "Send"} 
+          {sendLoading ? "Sending..." : "Send"} 
         </button>
       </div>
     </div>

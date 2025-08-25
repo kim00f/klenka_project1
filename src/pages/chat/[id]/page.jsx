@@ -8,6 +8,7 @@ export default function ChatPage({ params }) {
   const [loading, setLoading] = useState(false);
   const [userid, setuserid] = useState(null);
   const [sessionid, setsessionid] = useState(null);
+  const[provider,setProvider]= useState('');
 
  
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function ChatPage({ params }) {
           prompt: userMessage,
           user_id: userid,
           session_id: sessionid,
+          provider: provider
         }),
       });
 
@@ -90,6 +92,10 @@ export default function ChatPage({ params }) {
     <div className="flex flex-col w-full h-full bg-gray-700">
       <div className="p-4 bg-black text-white text-lg font-semibold shadow">
         Chat Page
+        <select onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
+          <option value="openai">GPT</option>
+          <option value="deepseek">Deepseek</option>
+        </select>
       </div>
 
       {/* Messages */}
