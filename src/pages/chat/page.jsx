@@ -8,7 +8,11 @@ export default function ChatPage() {
   const [userid, setUserid] = useState(null);
   const [loading, setLoading] = useState(false);  
   const[sendLoading,setSendLoading]= useState(false);
-  const[provider,setProvider]= useState('');
+  const[provider,setProvider]= useState(() => {
+  return localStorage.getItem("provider") ;
+});
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,8 +26,14 @@ export default function ChatPage() {
       setLoading(false) 
     };
     
+    
     loadUser();
   }, []);
+  useEffect(() => {
+  if (provider) {
+    localStorage.setItem("provider", provider);
+  }
+}, [provider]);
 
   const handleSend = async () => {
     if (!input.trim() || !userid || loading) return;
@@ -79,7 +89,7 @@ export default function ChatPage() {
     <div className="flex flex-col w-full h-full bg-gray-700">
       <div className="p-4 bg-black text-white text-lg font-semibold shadow">
         Chat Page
-        <select onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
+        <select value={provider} onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
           <option value="openai">GPT</option>
           <option value="deepseek">Deepseek</option>
         </select>

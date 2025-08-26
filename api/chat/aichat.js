@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   try {
     const { prompt, user_id , session_id, provider } = req.body;
-    console.log("Provider selected:", provider);
+   
 
     if (!prompt || prompt.trim() === "") {
       return res.status(400).json({ error: "Prompt is required" });

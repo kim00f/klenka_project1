@@ -1,6 +1,6 @@
 'use client';
 import {FaTrash} from "react-icons/fa";
-export default function deletechat(id) {
+export default function deletechat({ id, onDeleted }) {
     const handleDelete = async () => {
         try {
         const res = await fetch("/api/chat/deletechat", {
@@ -10,8 +10,12 @@ export default function deletechat(id) {
         });
         const data = await res.json();
         if (res.ok) {
-            
-            window.location.href = "/chat"; 
+            if(window.location.pathname === `/chat/${id}`){
+                window.location.href = "/chat"; 
+            }
+            else{
+                onDeleted?.()
+            }
         } else {
             alert(data.error || "Failed to delete chat session.");
         }

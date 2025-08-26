@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import supabase from "../../../../lib/createclient";
 
 export default function ChatPage({ params }) {
@@ -8,11 +8,18 @@ export default function ChatPage({ params }) {
   const [loading, setLoading] = useState(false);
   const [userid, setuserid] = useState(null);
   const [sessionid, setsessionid] = useState(null);
-  const[provider,setProvider]= useState('');
+  const[provider,setProvider]= useState(() => {
+  return localStorage.getItem("provider") ;
+});
+
+  const bottomRef = useRef(null);
 
  
   useEffect(() => {
     const pathParts = window.location.pathname.split("/chat/");
+     const queryParams = new URLSearchParams(window.location.search);
+  const providerFromUrl = queryParams.get("provider");
+  if (providerFromUrl) setProvider(providerFromUrl);
     if (pathParts[1]) {
       setsessionid(pathParts[1]);
     }
@@ -30,6 +37,13 @@ export default function ChatPage({ params }) {
 
     loadUser();
   }, []);
+
+  useEffect(() => {
+  if (provider) {
+    localStorage.setItem("provider", provider);
+  }
+}, [provider]);
+
 
   
   useEffect(() => {
@@ -52,7 +66,9 @@ export default function ChatPage({ params }) {
 
     loadMessages();
   }, [sessionid]);
-
+useEffect(() => {
+  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [messages]);
   // send message
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -92,7 +108,7 @@ export default function ChatPage({ params }) {
     <div className="flex flex-col w-full h-full bg-gray-700">
       <div className="p-4 bg-black text-white text-lg font-semibold shadow">
         Chat Page
-        <select onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
+        <select value={provider} onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
           <option value="openai">GPT</option>
           <option value="deepseek">Deepseek</option>
         </select>
@@ -127,6 +143,7 @@ export default function ChatPage({ params }) {
             </div>
           </div>
         )}
+        <div ref={bottomRef} />
       </div>
 
       {/* Input area */}

@@ -6,9 +6,7 @@ import DeleteChat from "../../functions/deletechat";
 export default function ChatLayout({ children }) {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadSessions = async () => {
+   const loadSessions = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const res = await fetch("/api/chat/get_session", {
@@ -21,8 +19,9 @@ export default function ChatLayout({ children }) {
         setSessions(data.session || []);
       }
       setLoading(false);
-      console.log("Sessions loaded:", sessions);
+      
     };
+  useEffect(() => {
     loadSessions();
   }, []);
 
@@ -54,7 +53,7 @@ export default function ChatLayout({ children }) {
             >
               {s.title} 
             </a>
-            <DeleteChat id={s.id} />
+            <DeleteChat id={s.id} onDeleted ={loadSessions}/>
             </div>
           ))
         )}
