@@ -14,7 +14,7 @@ export default function ChatPage() {
 
 
   const navigate = useNavigate();
-
+// for loading user
   useEffect(() => {
     const loadUser = async () => {
       setLoading(true)
@@ -29,6 +29,8 @@ export default function ChatPage() {
     
     loadUser();
   }, []);
+
+  // for provider
   useEffect(() => {
   if (provider) {
     localStorage.setItem("provider", provider);

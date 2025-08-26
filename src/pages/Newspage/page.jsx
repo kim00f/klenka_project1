@@ -32,6 +32,7 @@ export default function NewsPage() {
   const [keyWordInput, setKeyWordInput] = useState('');
   const [editing, setEditing] = useState(null);
   const [searchtext,setsearchtext]=useState('');
+  //load user 
   useEffect(()=>{
     const loaduseer= async()=>{
       const { data: {user}}= await supabase.auth.getUser();
@@ -44,6 +45,8 @@ export default function NewsPage() {
     };
     loaduseer();
   },[]);
+
+//get articles
   useEffect(() => {
     if (!userid) return; // Ensure userid is set before fetching news
     const fetchNews = async () => {
@@ -69,6 +72,8 @@ export default function NewsPage() {
     };
     fetchNews();
   }, [userid, searchtext]);
+
+
   const columnDefs = [
     
     { headerName: 'Title', field: 'title' },

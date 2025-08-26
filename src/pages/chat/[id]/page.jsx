@@ -14,12 +14,10 @@ export default function ChatPage({ params }) {
 
   const bottomRef = useRef(null);
 
- 
+// for load user
   useEffect(() => {
     const pathParts = window.location.pathname.split("/chat/");
-     const queryParams = new URLSearchParams(window.location.search);
-  const providerFromUrl = queryParams.get("provider");
-  if (providerFromUrl) setProvider(providerFromUrl);
+  
     if (pathParts[1]) {
       setsessionid(pathParts[1]);
     }
@@ -37,7 +35,7 @@ export default function ChatPage({ params }) {
 
     loadUser();
   }, []);
-
+// for provider
   useEffect(() => {
   if (provider) {
     localStorage.setItem("provider", provider);
@@ -45,7 +43,7 @@ export default function ChatPage({ params }) {
 }, [provider]);
 
 
-  
+  // loading messages
   useEffect(() => {
     if (!sessionid) return;
 
@@ -66,7 +64,8 @@ export default function ChatPage({ params }) {
 
     loadMessages();
   }, [sessionid]);
-useEffect(() => {
+  //for automatic scroll down to keep up with messages 
+  useEffect(() => {
   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 }, [messages]);
   // send message
