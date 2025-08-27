@@ -88,6 +88,18 @@ export default function NewsPage() {
       )
 
     }},
+    {
+  cellRenderer: (params) => {
+    return (
+      <a
+        href={`/Newspage/${params.data.id}`}
+        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        More Info
+      </a>
+    );
+  }
+},
   ];
   const handlekeywordadd =() =>{
     if(keyWordInput.trim()!=='' && !keywords.includes(keyWordInput.trim())){

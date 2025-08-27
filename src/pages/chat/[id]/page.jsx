@@ -1,25 +1,30 @@
 "use client";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import supabase from "../../../../lib/createclient";
 
 export default function ChatPage({ params }) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [userid, setuserid] = useState(null);
-  const [sessionid, setsessionid] = useState(null);
-  const[provider,setProvider]= useState(() => {
-  return localStorage.getItem("provider") ;
-});
+  const [userid, setUserid] = useState(null);
+  const [sessionid, setSessionid] = useState(null);
+
+  // safer: initialize provider only on client
+  const [provider, setProvider] = useState("openai"); 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("provider");
+      if (stored) setProvider(stored);
+    }
+  }, []);
 
   const bottomRef = useRef(null);
 
-// for load user
+  // Load user + session
   useEffect(() => {
     const pathParts = window.location.pathname.split("/chat/");
-  
     if (pathParts[1]) {
-      setsessionid(pathParts[1]);
+      setSessionid(pathParts[1]);
     }
 
     const loadUser = async () => {
@@ -27,7 +32,7 @@ export default function ChatPage({ params }) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        setuserid(user.id);
+        setUserid(user.id);
       } else {
         setLoading(false);
       }
@@ -35,15 +40,15 @@ export default function ChatPage({ params }) {
 
     loadUser();
   }, []);
-// for provider
+
+  // Persist provider in localStorage
   useEffect(() => {
-  if (provider) {
-    localStorage.setItem("provider", provider);
-  }
-}, [provider]);
+    if (provider) {
+      localStorage.setItem("provider", provider);
+    }
+  }, [provider]);
 
-
-  // loading messages
+  // Load messages
   useEffect(() => {
     if (!sessionid) return;
 
@@ -56,7 +61,7 @@ export default function ChatPage({ params }) {
         });
 
         const data = await res.json();
-        setMessages(data.messages || []); // safe fallback
+        setMessages(data.messages || []);
       } catch (err) {
         console.error("Failed to load messages:", err);
       }
@@ -64,11 +69,13 @@ export default function ChatPage({ params }) {
 
     loadMessages();
   }, [sessionid]);
-  //for automatic scroll down to keep up with messages 
+
+  // Auto-scroll
   useEffect(() => {
-  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-}, [messages]);
-  // send message
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Send message
   const sendMessage = async () => {
     if (!input.trim()) return;
     const userMessage = input;
@@ -84,7 +91,7 @@ export default function ChatPage({ params }) {
           prompt: userMessage,
           user_id: userid,
           session_id: sessionid,
-          provider: provider
+          provider,
         }),
       });
 
@@ -105,9 +112,14 @@ export default function ChatPage({ params }) {
 
   return (
     <div className="flex flex-col w-full h-full bg-gray-700">
-      <div className="p-4 bg-black text-white text-lg font-semibold shadow">
+      {/* Header */}
+      <div className="p-4 bg-black text-white text-lg font-semibold shadow flex items-center">
         Chat Page
-        <select value={provider} onChange={(e) => setProvider(e.target.value)}   className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600">
+        <select
+          value={provider}
+          onChange={(e) => setProvider(e.target.value)}
+          className="ml-4 p-2 rounded bg-gray-800 text-white border border-gray-600"
+        >
           <option value="openai">GPT</option>
           <option value="deepseek">Deepseek</option>
         </select>
@@ -122,16 +134,16 @@ export default function ChatPage({ params }) {
               m.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            <div
-              className={`max-w-xs px-4 py-2 rounded-2xl shadow 
-                ${
-                  m.role === "user"
-                    ? "bg-black text-white rounded-br-none"
-                    : "bg-transparent text-white rounded-bl-none"
-                }`}
-            >
-              {m.content}
-            </div>
+           <div
+      className={`max-w-lg px-4 py-2 rounded-2xl shadow 
+    ${
+      m.role === "user"
+        ? "bg-black text-white rounded-br-none"
+        : "bg-gray-600 text-white rounded-bl-none"
+    }`}
+>
+  {m.content}
+</div>
           </div>
         ))}
 
@@ -145,7 +157,7 @@ export default function ChatPage({ params }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input area */}
+      {/* Input */}
       <div className="p-4 bg-black border-t flex">
         <input
           type="text"
@@ -159,7 +171,7 @@ export default function ChatPage({ params }) {
         />
         <button
           onClick={sendMessage}
-          className="bg-black-600 text-white px-6 py-2 rounded-xl hover:bg-black-700 transition"
+          className="bg-gray-800 text-white px-6 py-2 rounded-xl hover:bg-gray-700 transition"
         >
           Send
         </button>

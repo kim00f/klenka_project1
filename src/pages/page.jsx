@@ -11,19 +11,7 @@ export default function Home() {
       </p>
 
       <section>
-        <h2 className="text-xl font-semibold mt-4 mb-2">How to use:</h2>
-        <ul className="list-disc list-inside space-y-1">
-          <li>Create a new file in <code>src/pages/</code> to add a new route.</li>
-          <li>Use folders and <code>page.jsx</code> for nested routes.</li>
-          <li>
-            Dynamic routes are supported using <code>[param]</code> in folder names,
-            e.g. <Link to="/news/1" className="text-blue-600 underline">/news/1</Link>.
-          </li>
-          <li>
-            <strong>Dummy folders:</strong> Wrap folders in parentheses to group pages without affecting the URL.
-            Example: <code>src/pages/(dummy)/news/page.jsx</code> becomes <code>/news</code>.
-          </li>
-        </ul>
+        
       </section>
 
       <section>
@@ -34,20 +22,6 @@ export default function Home() {
           components across pages — and you can nest layouts for different sections.
         </p>
       </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mt-4 mb-2">Example Routes:</h2>
-        <ul className="list-disc list-inside space-y-1">
-          <li><Link to="/news/1" className="text-blue-600 underline">News 1</Link></li>
-          <li><Link to="/news/1100" className="text-blue-600 underline">News 1100</Link></li>
-          <li><Link to="/hello" className="text-blue-600 underline">Hello Page</Link></li>
-        </ul>
-      </section>
-
-      <p className="text-sm text-gray-600">
-        ✏️ Edit <code>src/pages/page.jsx</code> to change this page.<br />
-        ⚡ Enjoy rapid development with hot reload, layouts, and simple routing!
-      </p>
     </div>
   );
 }

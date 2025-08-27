@@ -14,9 +14,7 @@ export default function MainLayout({ children }) {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1 gap-2">
             <li><Link to="/" className="link">Home</Link></li>
-            <li><Link to="/about" className="link">About</Link></li>
-            <li><Link to="/news" className="link">News</Link></li>
-            <li><Link to="/teams" className="link">Teams</Link></li>
+          
             <li><Link to="/Newspage">Newstable</Link></li>
             <li><Link to="/chat" className="link">Chat</Link></li>
             <li><SignIn/></li>
