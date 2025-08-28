@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     let client= provider === "deepseek" ? deepseek : openai;
     
     const result = await pool.query('SELECT * FROM news WHERE user_id=$1',[user_id]);
-    await pool.query('insert into chat_messages (session_id,role,content) values ($1,$2,$3)',[session_id,'user',prompt]);
+    await pool.query('insert into chat_messages (session_id,role,content,provider) values ($1,$2,$3,$4)',[session_id,'user',prompt,'user']);
     let chathistory = await pool.query('select* from chat_messages where session_id=$1 order by created_at asc',[session_id])
     dbcontext = JSON.stringify(result.rows);
     const completion = await client.chat.completions.create({
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     });
     const reply = completion.choices[0].message?.content || "I had trouble replying.";
     
-    await pool.query('insert into chat_messages (session_id,role,content) values ($1,$2,$3)',[session_id,'assistant',reply]);
+    await pool.query('insert into chat_messages (session_id,role,content,provider) values ($1,$2,$3,$4)',[session_id,'assistant',reply,provider]);
     return res.status(200).json({ reply });
 
   } catch (err) {

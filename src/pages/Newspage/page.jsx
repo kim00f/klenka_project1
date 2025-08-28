@@ -266,14 +266,24 @@ if(userid){
       />
     </div>
   )}
-        <AgGridReact   rowData={news}
-      columnDefs={columnDefs}
-     rowHeight={50}
-     pagination={true}
-     paginationPageSize={10}
-     domLayout="autoHeight"
-     className="ag-theme-alpine ag-bordered border-solid border-2 w-full"
-     overlayNoRowsTemplate="No articles found"/>
+      <AgGridReact
+  className="ag-bordered w-full border border-white rounded-lg shadow"
+  rowData={news}
+  columnDefs={columnDefs}
+  rowHeight={50}
+  pagination={true}
+  paginationPageSize={10}
+  domLayout="autoHeight"
+  overlayNoRowsTemplate="No articles found"
+  enableCellTextSelection={true}
+  suppressCopySingleCellRanges={false}
+  defaultColDef={{
+    sortable: false,
+    resizable: true,
+    flex: 1,
+    minWidth: 150,
+  }}
+/>
         </div>
     </div>
     

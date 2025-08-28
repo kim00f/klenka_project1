@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import supabase from "../../../../lib/createclient";
+import { DeepSeek, OpenAI } from "@lobehub/icons"; 
 
 export default function ChatPage({ params }) {
   const [input, setInput] = useState("");
@@ -76,7 +77,7 @@ export default function ChatPage({ params }) {
     if (!input.trim()) return;
     const userMessage = input;
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+    setMessages((prev) => [...prev, { role: "user", content: userMessage ,provider: "user" }]);
     setLoading(true);
 
     try {
@@ -90,11 +91,13 @@ export default function ChatPage({ params }) {
           provider,
         }),
       });
+      
 
       const data = await res.json();
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply },
+        { role: "assistant", content: data.reply,provider },
+        
       ]);
     } catch (err) {
       setMessages((prev) => [
@@ -104,6 +107,7 @@ export default function ChatPage({ params }) {
     } finally {
       setLoading(false);
     }
+    console.log("messages:",messages)
   };
 
   return (
@@ -138,6 +142,13 @@ export default function ChatPage({ params }) {
               : "max-w-5xl bg-transparent text-white rounded-bl-none"
           }`}
       >
+        
+        {m.role !== "user" && (
+          <>
+            {m.provider === "openai" && <OpenAI size={28} />}
+            {m.provider === "deepseek" && <DeepSeek size={28} />}
+          </>
+        )}
         {m.content}
       </div>
     </div>
