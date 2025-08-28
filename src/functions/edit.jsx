@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 import { useEffect } from 'react';
+
 export default function EditNewsForm({ id, currentTitle, currentDescription,currentkeywords,onCancel, onSave }) {
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
-  const [keywords,setkeywords] = useState(currentkeywords);
+  const [keywords,setkeywords] = useState(currentkeywords||[]);
   const [keyWordInput, setKeyWordInput] = useState('');
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setTitle(currentTitle);
     setDescription(currentDescription);
+    setkeywords(currentkeywords)
   }, [id,currentTitle, currentDescription]);
   const handlekeywordadd =() =>{
     if(keyWordInput.trim()!=='' && !keywords.includes(keyWordInput.trim())){
@@ -38,6 +40,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
         body: JSON.stringify({ id, description }),
       });
       // update keywords 
+      console.log(keywords)
       const reskey=await fetch('/api/news2/updatekeywords',{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -76,7 +79,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
       <div>
             <label>KEYWORDS:</label>
             <div>
-              <input type="text" value={keyWordInput} onChange={(e)=>setKeyWordInput(e.target.value)}/>
+              <input className="" placeholder="Add keyword" type="text" value={keyWordInput} onChange={(e)=>setKeyWordInput(e.target.value)}/>
               <button className="ml-2 px-2 py-1 bg-blue-500 text-white rounded" onClick={handlekeywordadd}>Add</button>
             </div>
             <div>
@@ -93,7 +96,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
         >
           {loading ? 'Saving...' : 'Save'}
         </button>
-        <button className="cursor-pointer"onClick={() => onCancel()}>Cancel</button>
+        <button className="bg-whitetext-black px-4 py-2 rounded cursor-pointer hover:bg-gray-300 disabled:opacity-50"onClick={() => onCancel()}>Cancel</button>
       </div>
     </div>
   );

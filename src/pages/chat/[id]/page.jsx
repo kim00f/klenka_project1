@@ -10,13 +10,9 @@ export default function ChatPage({ params }) {
   const [sessionid, setSessionid] = useState(null);
 
   // safer: initialize provider only on client
-  const [provider, setProvider] = useState("openai"); 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("provider");
-      if (stored) setProvider(stored);
-    }
-  }, []);
+  const [provider, setProvider] = useState(() => {
+  return localStorage.getItem("provider") ;
+});
 
   const bottomRef = useRef(null);
 
@@ -126,36 +122,36 @@ export default function ChatPage({ params }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`flex ${
-              m.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-           <div
-      className={`max-w-lg px-4 py-2 rounded-2xl shadow 
-    ${
-      m.role === "user"
-        ? "bg-black text-white rounded-br-none"
-        : "bg-gray-600 text-white rounded-bl-none"
-    }`}
->
-  {m.content}
-</div>
-          </div>
-        ))}
-
-        {loading && (
-          <div className="flex justify-start">
-            <div className="max-w-xs px-4 py-2 rounded-2xl shadow bg-gray-600 text-white animate-pulse">
-              ...
-            </div>
-          </div>
-        )}
-        <div ref={bottomRef} />
+ <div className="flex-1 overflow-y-auto p-6 space-y-6">
+  {messages.map((m, i) => (
+    <div
+      key={i}
+      className={`flex ${
+        m.role === "user" ? "justify-end" : "justify-center"
+      }`}
+    >
+      <div
+        className={`px-6 py-4 text-xl rounded-2xl shadow-md leading-relaxed
+          ${
+            m.role === "user"
+              ? "max-w-md bg-black text-white rounded-br-none"
+              : "max-w-5xl bg-transparent text-white rounded-bl-none"
+          }`}
+      >
+        {m.content}
       </div>
+    </div>
+  ))}
+
+  {loading && (
+    <div className="flex justify-center">
+      <div className="px-6 py-4 rounded-2xl shadow bg-gray-600/70 text-white animate-pulse text-center">
+        ...
+      </div>
+    </div>
+  )}
+  <div ref={bottomRef} />
+</div>
 
       {/* Input */}
       <div className="p-4 bg-black border-t flex">

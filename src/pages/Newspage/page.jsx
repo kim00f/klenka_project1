@@ -77,7 +77,7 @@ export default function NewsPage() {
   const columnDefs = [
     
     { headerName: 'Title', field: 'title' },
-    { headerName: 'Description', field: 'description' },
+    { headerName: 'Description', field: 'description', },
     {cellRenderer: (params) => {
       return( <Delete id={params.data.id}/>)
     }
@@ -116,6 +116,7 @@ export default function NewsPage() {
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
         <h1 className="text-xl font-bold mb-6">Create News Article</h1>
+        <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-sm transition" onClick={() => setcreateform(false)}>return to articles</button>
         
         {/* Title Input */}
         <div className="mb-6">
@@ -227,12 +228,12 @@ export default function NewsPage() {
 }
 if(userid){
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="min-h-screen md:max-w-full bg-gray-50 py-10">
+    <div className="max-w-max mx-auto p-6 bg-white rounded-lg shadow">
       {/* Create Post button */}
       <button
         className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-sm transition"
-        onClick={() => setcreateform(true)}
+        onClick={() => {setcreateform(true); setEditing(null);}}
       >
         Create Post
       </button>
@@ -240,11 +241,12 @@ if(userid){
      
       {/* News list */}
       <h1 className="text-xl font-bold mb-4 mt-4">Article</h1>
-      <div className="ag-theme-alpine" style={{ height: 600, width: 850 }} >
+      <div className="ag-theme-alpine w-full" style={{ height: 600, width: 1800 }} >
      {editing && (
     <div className="bg-white shadow-md border-b p-4">
-      <h2 className="text-xl font-bold mb-4">Editing: {editing.title}</h2>
-
+      <button className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 disabled:opacity-50" onClick={() => setEditing(null)}>return</button>
+      
+    <h2 className="text-xl font-bold mb-4">Editing: {editing.title}</h2>
       <EditNewsForm
         id={editing.id}
         currentTitle={editing.title}
@@ -270,7 +272,7 @@ if(userid){
      pagination={true}
      paginationPageSize={10}
      domLayout="autoHeight"
-     className="ag-theme-alpine"
+     className="ag-theme-alpine ag-bordered border-solid border-2 w-full"
      overlayNoRowsTemplate="No articles found"/>
         </div>
     </div>
@@ -279,7 +281,6 @@ if(userid){
   );
 }
 else{
-  
   return( 
     <div className="min-h-screen w-screen bg-white flex items-center justify-center">
       <p className="text-gray-500">Please log in to view your news articles.</p>

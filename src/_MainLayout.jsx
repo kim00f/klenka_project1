@@ -52,8 +52,7 @@ function ThemeToggle() {
   return (
     <label id="theme-toggle" className="swap swap-rotate cursor-pointer">
       <input type="checkbox" />
-      <div className="swap-on text-xl">🌞</div>
-      <div className="swap-off text-xl">🌙</div>
+      
     </label>
   );
 }

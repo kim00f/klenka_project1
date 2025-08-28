@@ -12,48 +12,58 @@ export default function NewsPage({ params }) {
     if (!newsId) return;
 
     const fetchNews = async () => {
-        
       try {
         const res = await fetch("/api/news2/getone", {
-          method: "GET",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: newsId }),
         });
-        console.log("response",res)
-        
+
         const data = await res.json();
         setNews(data.news);
-        
       } catch (err) {
         console.error("Error fetching news:", err);
       } finally {
         setLoading(false);
       }
-      console.log("news",mews)
     };
 
     fetchNews();
   }, []);
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!news) return <div className="p-4">News not found</div>;
+  if (loading)
+    return <div className="p-6 text-center text-gray-400">Loading...</div>;
+  if (!news)
+    return <div className="p-6 text-center text-red-400">News not found</div>;
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold">{news.title}</h1>
-      <p className="mt-2">{news.description}</p>
-      {news.key_words && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {news.key_words.map((kw, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-gray-700 rounded text-sm"
-            >
-              {kw}
-            </span>
-          ))}
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-950 flex justify-center items-center p-6">
+      <div className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-lg p-8 text-white">
+        <h1 className="text-3xl font-extrabold text-blue-400 mb-4">
+          {news.title}
+        </h1>
+        <p className="text-lg leading-relaxed text-gray-300">
+          {news.description}
+        </p>
+
+        {news.key_words && (
+          <div className="mt-6">
+            <h2 className="text-sm font-semibold text-gray-400 mb-2 uppercase tracking-wide">
+              Key Words
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {news.key_words.map((kw, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 bg-blue-600/20 border border-blue-500/30 rounded-full text-sm text-blue-300 hover:bg-blue-600/40 transition"
+                >
+                  #{kw}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
