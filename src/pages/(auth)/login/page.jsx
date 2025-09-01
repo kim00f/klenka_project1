@@ -20,7 +20,7 @@ export default function LoginPage() {
     if (error) return setErrorMsg(error.message);
 
     // If session exists → go to articles, otherwise server layout will handle redirect
-    if (data?.session) window.location.reload();
+    if (data?.session) window.location.href='/';
     else window.location.reload();;
   }
 
