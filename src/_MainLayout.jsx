@@ -17,6 +17,8 @@ export default function MainLayout({ children }) {
           
             <li><Link to="/Newspage">Newstable</Link></li>
             <li><Link to="/chat" className="link">Chat</Link></li>
+            <li><Link to="/Tinymce">Tinymce</Link></li>
+            
             <li><SignIn/></li>
 
             {/* ✅ Use ThemeToggle component here */}

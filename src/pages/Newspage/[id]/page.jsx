@@ -42,9 +42,11 @@ export default function NewsPage({ params }) {
         <h1 className="text-3xl font-extrabold text-blue-400 mb-4">
           {news.title}
         </h1>
-        <p className="text-lg leading-relaxed text-gray-300">
-          {news.description}
-        </p>
+        <div
+      className="text-lg leading-relaxed prose prose-invert max-w-none"
+      dangerouslySetInnerHTML={{ __html: news.description }}
+    />
+
 
         {news.key_words && (
           <div className="mt-6">

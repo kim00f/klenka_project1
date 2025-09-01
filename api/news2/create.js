@@ -10,7 +10,7 @@ export default async function (req, res) {
   try {
     const result = await pool.query(
       'INSERT INTO news (title, description, user_id, key_words) VALUES ($1, $2, $3,$4) RETURNING *',
-      [title, description, userid,key_words]
+      [title, description, userid,  key_words]
     )
 
     return res.status(201).json({ message: 'News created', news: result.rows[0] })

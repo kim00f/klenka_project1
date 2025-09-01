@@ -107,7 +107,7 @@ export default function ChatPage({ params }) {
     } finally {
       setLoading(false);
     }
-    console.log("messages:",messages)
+    
   };
 
   return (

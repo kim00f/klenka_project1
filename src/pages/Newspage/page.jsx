@@ -10,6 +10,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { ModuleRegistry } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { CsvExportModule } from 'ag-grid-community';
+import { Editor } from '@tinymce/tinymce-react';
 
 
 // Register only available community modules
@@ -77,7 +78,19 @@ export default function NewsPage() {
   const columnDefs = [
     
     { headerName: 'Title', field: 'title' },
-    { headerName: 'Description', field: 'description', },
+    { headerName: 'Description', field: 'description', cellRenderer: (params) => {
+    if (!params.value) return "";
+    // Strip HTML tags first so you don’t cut in the middle of a <p> or <img>
+    const temp = document.createElement("div");
+    temp.innerHTML = params.value;
+    const plainText = temp.textContent || temp.innerText || "";
+
+    const preview = plainText.length > 100 
+      ? plainText.substring(0, 100) + "..." 
+      : plainText;
+
+    return <span>{preview}</span>;
+  } },
     {cellRenderer: (params) => {
       return( <Delete id={params.data.id}/>)
     }
@@ -133,15 +146,34 @@ export default function NewsPage() {
         
         {/* Description Input */}
         <div className="mb-6">
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Description:</label>
-          <textarea
-            id="content"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-64 resize-none"
-            placeholder="Type your message here..."
-            value={postText}
-            onChange={(e) => setPostText(e.target.value)}
-          ></textarea>
-        </div>
+      <label
+        htmlFor="content"
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
+        Description:
+      </label>
+
+      <Editor
+        apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+        value={postText}
+        onEditorChange={(content) => setPostText(content)}
+        init={{
+          height: 1000,
+          menubar: true,
+          plugins: [
+            "advlist autolink lists link image charmap preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table code help wordcount",
+          ],
+          toolbar:
+            "undo redo | formatselect | bold italic backcolor | \
+             alignleft aligncenter alignright alignjustify | \
+             bullist numlist outdent indent | removeformat | help | image",
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+        }}
+      />
+    </div>
         
         {/* Keywords Section */}
         <div className="mb-6">
