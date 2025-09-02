@@ -1,5 +1,11 @@
 import pool from '../../lib/db.js'
-
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb', // allow larger payloads
+    },
+  },
+};
 export default async function (req, res) {
   const { title, description, userid, key_words } = req.body
 
