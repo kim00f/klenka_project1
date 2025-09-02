@@ -128,9 +128,52 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
-        <h1 className="text-xl font-bold mb-6">Create News Article</h1>
         <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-sm transition" onClick={() => setcreateform(false)}>return to articles</button>
+        <h1 className="text-xl font-bold mb-6">Create News Article</h1>
         
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-sm transition"
+            onClick={async () => {
+              if (postTitle.trim() !== '' && postText.trim() !== '') {
+                try {
+                  const res = await fetch('/api/news2/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: postTitle, description: postText, userid:userid , key_words: keywords }),
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    if (data.news.id) {
+                      setNews([data.news, ...news]);
+                      setPostTitle('');
+                      setPostText('');
+                      setcreateform(false);
+                      window.location.reload();
+                    }
+                  } else {
+                    const errData = await res.json();
+                    alert('Failed to create post: ' + (errData?.message || 'Unknown error'));
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Something went wrong. Please try again.');
+                }
+              } else {
+                alert('Please enter both title and description!');
+              }
+            }}
+          >
+            Create
+          </button>
+          <button 
+            className="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-md shadow-sm transition"
+            onClick={() => setcreateform(false)}
+          >
+            Cancel
+          </button>
+        </div>
         {/* Title Input */}
         <div className="mb-6">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title:</label>
@@ -164,6 +207,7 @@ export default function NewsPage() {
             "advlist autolink lists link image charmap preview anchor",
             "searchreplace visualblocks code fullscreen",
             "insertdatetime media table code help wordcount",
+            "link image code table lists",
           ],
           toolbar:
             "undo redo | formatselect | bold italic backcolor | \
@@ -211,49 +255,7 @@ export default function NewsPage() {
           </div>
         </div>
         
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <button
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-sm transition"
-            onClick={async () => {
-              if (postTitle.trim() !== '' && postText.trim() !== '') {
-                try {
-                  const res = await fetch('/api/news2/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: postTitle, description: postText, userid:userid , key_words: keywords }),
-                  });
-                  if (res.ok) {
-                    const data = await res.json();
-                    if (data.news.id) {
-                      setNews([data.news, ...news]);
-                      setPostTitle('');
-                      setPostText('');
-                      setcreateform(false);
-                      window.location.reload();
-                    }
-                  } else {
-                    const errData = await res.json();
-                    alert('Failed to create post: ' + (errData?.message || 'Unknown error'));
-                  }
-                } catch (error) {
-                  console.error('Error:', error);
-                  alert('Something went wrong. Please try again.');
-                }
-              } else {
-                alert('Please enter both title and description!');
-              }
-            }}
-          >
-            Create
-          </button>
-          <button 
-            className="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-md shadow-sm transition"
-            onClick={() => setcreateform(false)}
-          >
-            Cancel
-          </button>
-        </div>
+        
       </div>
     </div>
   );

@@ -63,6 +63,16 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
 
   return (
     <div className="border p-4 rounded h-full shadow-sm bg-white mb-4">
+      <div className="flex gap-3">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 disabled:opacity-50"
+          onClick={handleSave}
+          disabled={loading}
+        >
+          {loading ? 'Saving...' : 'Save'}
+        </button>
+        <button className="bg-whitetext-black px-4 py-2 rounded cursor-pointer hover:bg-gray-300 disabled:opacity-50"onClick={() => onCancel()}>Cancel</button>
+      </div>
       <input
         type="text"
         className="w-full border px-3 py-2 mb-3 rounded"
@@ -102,16 +112,7 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
               ))}
             </div>
           </div>
-      <div className="flex gap-3">
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600 disabled:opacity-50"
-          onClick={handleSave}
-          disabled={loading}
-        >
-          {loading ? 'Saving...' : 'Save'}
-        </button>
-        <button className="bg-whitetext-black px-4 py-2 rounded cursor-pointer hover:bg-gray-300 disabled:opacity-50"onClick={() => onCancel()}>Cancel</button>
-      </div>
+      
     </div>
   );
 }
