@@ -82,8 +82,8 @@ export default function EditNewsForm({ id, currentTitle, currentDescription,curr
       />
     <Editor
         apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-        value={postText}
-        onEditorChange={(content) => setPostText(content)}
+        value={description}
+        onEditorChange={(content) => setDescription(content)}
         init={{
           height: 1000,
           menubar: true,
